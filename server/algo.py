@@ -1,109 +1,87 @@
 from copy import copy, deepcopy
 
-def replaceCharAtIndex(s, char, idx):
-    return s[:idx] + char + s[idx + 1:]
+# util functions
+counter = [0]
 
-def markDiagonal(row, col, board, n):
-    i = row
-    j = col
-
-    while i < n and j < n:
-        board[i][j] = 'x'
-        i += 1
-        j += 1
-
-    i = row
-    j = col
-    while i > -1 and j < n:
-        board[i][j] = 'x'
-        i -= 1
-        j += 1
-
-    i = row
-    j = col
-    while i < n and j > -1:
-        board[i][j] = 'x'
-        i += 1
-        j -= 1
-
-    i = row
-    j = col
-    while i > -1 and j > -1:
-        board[i][j] = 'x'
-        i -= 1
-        j -= 1
-
-    return board
-
-def placeQueen(pos, board, n):
-    for i in range(n):
-        board[pos[0]][i] = 'x'
-    for j in range(n):
-        board[j][pos[1]] = 'x'
-    temp =  markDiagonal(pos[0], pos[1], board, n)
-    temp[pos[0]][pos[1]] = 'Q'
-    return temp
-
-def getNumValidRows(board):
-    valid_rows = 0
-    i = -1
-    while i < len(board):
-        if('.' in board[i]):
-            valid_rows += 1
-        i += 1
-
-    return valid_rows
-
-def backtrack(board, num_q, valid_rows, n, ans, depth):
-    # print(f"{'  '*depth} depth {depth}: qs need to place: {n-num_q} valid_rows: {valid_rows}")
-    # pprint(board)
-    # print("=============")
-    if(valid_rows < n-num_q):
-        return
-    if num_q == n:
-        ans.append(board)
-        return
-    for i in range(len(board)):
-        for j in range(len(board[0])):
-            if board[i][j] == '.':
-                board_copy = deepcopy(board)
-                board = placeQueen((i, j), board, n)
-                backtrack(board, num_q+1, getNumValidRows(board), n, ans, depth+1)
-                board_copy[i][j] = 'x'
-                board = board_copy
-                j += 1
 
 def pprint(board):
     for i in range(len(board)):
         print(board[i])
 
+
 def board_to_pieces(board):
     pieces = []
     for i in range(len(board)):
         for j in range(len(board)):
-            if board[i][j] == 'Q':
+            if board[i][j] == "Q":
                 pieces.append([i, j])
     return pieces
 
-def n_queens(size):
-    start_board = []
-    for j in range(size):
-        start_board.append([])
-        for k in range(size):
-            start_board[j].append('.')
-    ans = []
-    backtrack(start_board, 0, size, size, ans, 0)
 
+# n_queens related functions
+def placeQueen(pos, board, n):
+    x = pos[0]
+    y = pos[1]
+    for i in range(y + 1, n):
+        # print(f"({x+i-y}, {i}), ({x-(i-y)},{i})")
+        if x + i - y < n:
+            board[x + i - y][i] = "x"
+        if x - (i - y) >= 0:
+            board[x - (i - y)][i] = "x"
+
+    for i in range(y - 1, -1, -1):
+        # print(f"({x+i-y}, {i}), ({x-(i-y)},{i})")
+        if x + i - y >= 0:
+            board[x + i - y][i] = "x"
+        if x - (i - y) < n:
+            board[x - (i - y)][i] = "x"
+    for i in range(n):
+        board[pos[0]][i] = "x"
+    for j in range(n):
+        board[j][pos[1]] = "x"
+    board[x][y] = "Q"
+    return board
+
+
+def getNumValidRows(board):
+    valid_rows = 0
+    i = -1
+    for row in board:
+        if "." in row:
+            valid_rows += 1
+    return valid_rows
+
+
+def backtrack(board, num_q, n, ans, depth):
+    valid_rows = getNumValidRows(board)
+    if valid_rows < n - num_q:
+        return
+    # print(
+    #     f"{'  '*depth} depth {depth}: qs need to place: {n-num_q} valid_rows: {valid_rows}, {valid_rows < n - num_q}"
+    # )
+    # pprint(board)
+    # print("=============")
+    if num_q == n:
+        ans.append(board)
+        return
+    counter[0] += 1
+    for i in range(len(board)):
+        for j in range(len(board[0])):
+            if board[i][j] == ".":
+                board_copy = deepcopy(board)
+                board = placeQueen((i, j), board, n)
+                valid_rows = getNumValidRows(board)
+                backtrack(board, num_q + 1, n, ans, depth + 1)
+                board_copy[i][j] = "x"
+                board = board_copy
+
+
+def n_queens(size):
+    start_board = [["." for x in range(size)] for y in range(size)]
+    ans = []
+    backtrack(start_board, 0, size, ans, 0)
     return [board_to_pieces(a) for a in ans]
 
-print(n_queens(4))
 
-# for i in range(8, 9):
-#     start_board = []
-#     for j in range(i):
-#         start_board.append([])
-#         for k in range(i):
-#             start_board[j].append('.')
-#     ans = []
-#     backtrack(start_board, 0,i, i, ans, 0)
-#     print(i, len(ans))
+print(f"Solution: {n_queens(4)}")
+print("# of times recur has been called =", counter[0])
