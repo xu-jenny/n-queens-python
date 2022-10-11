@@ -70,20 +70,12 @@ def backtrack(board, num_q, valid_rows, n, ans, depth):
                 board = placeQueen((i, j), board, n)
                 backtrack(board, num_q+1, getNumValidRows(board), n, ans, depth+1)
                 board_copy[i][j] = 'x'
-                board = board_copy #removeQueen((i, j), board)
+                board = board_copy
                 j += 1
 
 def pprint(board):
     for i in range(len(board)):
         print(board[i])
-
-# starting_board = [[".",".", ".", "."], [".",".", ".", "."], [".",".", ".", "."], [".",".", ".", "."]]
-# lst = []
-# backtrack(starting_board, 0, 4, 4, lst, 0)
-# print("answer is: ")
-# for a in lst:
-#     pprint(a)
-# # pprint(placeQueen((0, 0), [[".",".", ".", "."], [".",".", ".", "."], [".",".", ".", "."], [".",".", ".", "."]], 4))
 
 for i in range(8, 9):
     start_board = []
@@ -94,31 +86,3 @@ for i in range(8, 9):
     ans = []
     backtrack(start_board, 0,i, i, ans, 0)
     print(i, len(ans))
-
-# for a in ans:
-#     pprint(a)
-#     print("=====")
-
-
-#     for c in all_pos:
-#         if c isValidPos:
-#             # pos = findNextvalidPos
-#             board = placeQueen(pos)
-#             self.backtrack(board ... )
-#             board = removeQueen(pos)
-
-    # if cand is None:
-    #     ans.append(res)
-    #     return
-    # for c in cand:
-    #     res += c
-    #     self.backtrack(cand.pop(c), res)
-    #     cand.add(c)
-
-
-
-# ["Qxxx","xx..","x.x.","x..x"] q_pos -> board
-# ["Qxxx",
-#  "xxQx",
-#  "xxxx",
-#  "xQxx"]  # number of Qs, # of valid pos
