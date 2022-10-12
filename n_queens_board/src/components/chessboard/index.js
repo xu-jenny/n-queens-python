@@ -11,10 +11,6 @@ export default function Chessboard({
 }) {
   document.documentElement.style.setProperty("--size", size);
   let board = [];
-  // let pieces = [
-  //   [0, 0],
-  //   [2, 2],
-  // ];
   for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
       const number = j + i + 2;

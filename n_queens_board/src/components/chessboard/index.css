@@ -8,18 +8,9 @@
     grid-template-rows: repeat(var(--size), 100px);
     width: var(--size) * 100px;
     height: var(--size) * 100px;
-    background-color: blue;
 }
 
 #chessboard .tile {
     width: 100px;
     height: 100px;
-}
-
-#chessboard .black-tile {
-    background-color: #779556;
-}
-
-#chessboard .white-tile {
-    background-color: #ebecd0;
 }
